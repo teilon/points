@@ -1,5 +1,6 @@
 from source import read_file
 from output import write_file
+from db import db_connet
 
 
 def main():
@@ -8,6 +9,7 @@ def main():
     data = read_file(filename)
     write_file(data[data['count'] > 20])
 
+    db_connet()
     print('done')
 
 
