@@ -5,9 +5,9 @@ from db import db_connet
 
 def main():
 
-    filename = 'source/points.xlsx'
-    data = read_file(filename)
-    write_file(data[data['count'] > 20])
+    # filename = 'source/points.xlsx'
+    # data = read_file(filename)
+    # write_file(data[data['count'] > 20])
 
     db_connet()
     print('done')
