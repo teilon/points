@@ -33,19 +33,20 @@ def test(con):
         ')'
     )
     con.execute(
-        'CREATE TABLE Point(' +
-        'id SERIAL PRIMARY KEY,' +
-        'name char(64),' +
-        'form_id integer references FormDict(id),' +
-        'payment_id integer references PaymentDict(id)' +
-        ')'
-    )
-    con.execute(
         'CREATE TABLE PointContact(' +
         'id SERIAL PRIMARY KEY,' +
         'point_id integer REFERENCES Point(id),' +
         'name char(64),' +
         'contact char(64)' +
+        ')'
+    )
+    con.execute(
+        'CREATE TABLE Point(' +
+        'id SERIAL PRIMARY KEY,' +
+        'name char(64),' +
+        'form_id integer references FormDict(id),' +
+        'payment_id integer references PaymentDict(id),' +
+        'adress char(64)' +
         ')'
     )
     con.execute(
