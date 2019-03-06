@@ -8,7 +8,7 @@ def read_file(filename):
     # df['number'] = df['article'].apply(get_aromaname)
     # df['type'] = df['number'].apply(lambda x: x[0])
     # groupped = df.groupby(['region', 'station'])['real'].sum()
-    result = df[['name', 'payment', 'form', 'money', 'count']]
+    result = df[['name', 'address', 'payment', 'form']]
     return result
 
 
