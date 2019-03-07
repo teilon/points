@@ -3,32 +3,40 @@ import postgresql
 
 def db_connet():
     con = postgresql.open('pq://torn:torn@185.143.173.37:5432/dbmarket')
-    test(con)
-    fill_dics(con)
+    # test(con)
+    # fill_dics(con)
+    insert_to()
 
 
-def insert_to(data):
+def insert_to():
     con = postgresql.open('pq://torn:torn@185.143.173.37:5432/dbmarket')
     # ins = con.prepare("INSERT INTO Point (name, password) VALUES ($1, $2)")
-    "WITH ins (name, form, payment, address) AS (VALUES ({}, {}, {}, {}))" \
-    "INSERT INTO Point (name, form_id, payment_id, address) " \
-    "SELECT ins.description, FormDict.id, PaymentDict.id" \
-    "FROM " \
-    "FormDict JOIN ins ON ins.form = FormDict.id" \
-    "PaymentDict JOIN ins ON ins.payment = PaymentDict.id"
+    # "WITH ins (name, form, payment, address) AS (VALUES ({}, {}, {}, {}))" \
+    # "INSERT INTO Point (name, form_id, payment_id, address) " \
+    # "SELECT ins.description, FormDict.id, PaymentDict.id" \
+    # "FROM " \
+    # "FormDict JOIN ins ON ins.form = FormDict.id" \
+    # "PaymentDict JOIN ins ON ins.payment = PaymentDict.id"
 
-    "CREATE OR REPLACE PROCEDURE insert_point(name char(64), form char(64), payment char(64), address char(64)) " \ 
-    "LANGUAGE plpgsql" \ 
-    "AS $$" \
-    "DECLARE" \
-    "form_id int;" \
-    "payment_id int;" \
-    "BEGIN" \
-    "form_id := SELECT id FROM FormDict WHERE name=form" \
-    "payment_id := SELECT id FROM PaymentDict WHERE name=payment" \
-    "INSERT INTO Point (name, form_id, payment_id, address) VALUES (name, form_id, payment_id, address)" \
-    "END $$;"
+    # con.execute("CREATE OR REPLACE PROCEDURE insert_point() LANGUAGE plpgsql AS $$ $$; ")
 
+    con.execute("CREATE OR REPLACE PROCEDURE insert_point(" +
+                # "char(64), char(64), char(64), char(64)"
+                ") " +
+                "LANGUAGE plpgsql " +
+                "AS $$ " +
+                # "DECLARE " \
+                # "form_id int; " \
+                # "payment_id int; " \
+                # "BEGIN " +
+                # "form_id := SELECT id FROM FormDict WHERE name=$2; " \
+                # "payment_id := SELECT id FROM PaymentDict WHERE name=$3; " \
+                # "INSERT INTO Point (name, form_id, payment_id, address) VALUES ($1, $2, $3, $4); " \
+                # "END; " +
+                "$$; "
+                )
+    proc = "CALL insert_point({}, {}, {}, {});".format('name', 'sale point', 'cash', 'Райымбека 91')
+    con.execute(proc)
 
 
 def fill_dics(con):
