@@ -1,6 +1,7 @@
 from source import read_file
 from output import write_file
-from db import db_connet
+# from db import db_connet
+from db_psy import db_connet
 
 
 def main():
