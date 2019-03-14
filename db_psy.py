@@ -1,6 +1,8 @@
 import psycopg2
 from config import db_config
 
+import datetime
+
 
 def db_connet():
 
@@ -19,6 +21,7 @@ def db_connet():
     insert_point('name1', 'sale point', 'real', 'Дильмухамеда 91')
     insert_point_contact('name1', 'Kamil', '8 701 449 19 12')
     insert_trader('Erba')
+    insert_trade('Erba', 'name1', '10', '15000', datetime.date(2012, 12, 14))
     insert_trade('Erba', 'name1', '10', '15000')
 
 
@@ -64,12 +67,12 @@ def insert_trader(name):
             conn.close()
 
 
-def insert_trade(trader_name, point_name, count, sale):
+def insert_trade(trader_name, point_name, count, sale, date=datetime.date.today()):
     conn = None
     try:
         conn = psycopg2.connect(db_config())
-        params = {'var_trader_name': trader_name, 'var_point_name': point_name, 'var_count': count, 'var_sale': sale}
-        exec_to(conn, 'insert_trade', params)
+        params = {'var_trader_name': trader_name, 'var_point_name': point_name, 'var_count': count, 'var_sale': sale, 'var_date': date}
+        exec_to(conn, 'insert_traded', params)
         conn.commit()
     except Exception as error:
         print('err| {}'.format(error))
@@ -210,6 +213,26 @@ def test(conn):
                 "point_id := (SELECT id FROM Point WHERE name=var_point_name); " +
                 "INSERT INTO Trade (trader_id, point_id, count, sale) " +
                 "VALUES (trader_id, point_id, var_count, var_sale); " +
+                "RETURN 1;" +
+                "END; " +
+                "$$ LANGUAGE plpgsql ; "
+                )
+    cur.execute("CREATE OR REPLACE FUNCTION insert_traded(" +
+                "var_trader_name char(32), " +
+                "var_point_name char(32), " +
+                "var_count integer, " +
+                "var_sale money, " +
+                "var_date DATE) " +
+                "RETURNS integer AS $$ " +
+                "DECLARE " +
+                "point_id int; " +
+                "trader_id int; " +
+                "date_ DATE;"
+                "BEGIN " +
+                "trader_id := (SELECT id FROM Trader WHERE name=var_trader_name); " +
+                "point_id := (SELECT id FROM Point WHERE name=var_point_name); " +
+                "INSERT INTO Trade (trader_id, point_id, count, sale, date) " +
+                "VALUES (trader_id, point_id, var_count, var_sale, var_date); " +
                 "RETURN 1;" +
                 "END; " +
                 "$$ LANGUAGE plpgsql ; "
